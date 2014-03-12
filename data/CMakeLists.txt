@@ -1,7 +1,7 @@
 
 
 set(FCITX_DATA_FILES
-  AutoEng.dat
+  UkAutoEng.dat
   )
 
 
