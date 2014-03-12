@@ -168,7 +168,7 @@ boolean SwitchToEng(FcitxAutoEngState *autoEngState, const char *str);
 static void ShowAutoEngMessage(FcitxAutoEngState* autoEngState,
                                INPUT_RETURN_VALUE *retval);
 
-FCITX_DEFINE_PLUGIN(fcitx_uk_autoeng, module ,FcitxModule) = {
+FCITX_DEFINE_PLUGIN(fcitx_autoeng_ng, module ,FcitxModule) = {
     AutoEngCreate,
     NULL,
     NULL,
@@ -527,13 +527,13 @@ void ResetAutoEng(void *arg)
     autoEngState->cursor_moved = false;
 }
 
-static CONFIG_DESC_DEFINE(GetAutoEngConfigDesc, "fcitx-uk-autoeng.desc");
+static CONFIG_DESC_DEFINE(GetAutoEngConfigDesc, "fcitx-autoeng-ng.desc");
 
 static void
 SaveAutoEngConfig(FcitxAutoEngConfig* fs)
 {
     FcitxConfigFileDesc *configDesc = GetAutoEngConfigDesc();
-    FILE *fp = FcitxXDGGetFileUserWithPrefix("conf", "fcitx-uk-autoeng.config",
+    FILE *fp = FcitxXDGGetFileUserWithPrefix("conf", "fcitx-autoeng-ng.config",
                                              "w", NULL);
     FcitxConfigSaveConfigFileFp(fp, &fs->gconfig, configDesc);
     if (fp)
@@ -547,7 +547,7 @@ LoadAutoEngConfig(FcitxAutoEngConfig *config)
     if (configDesc == NULL)
         return false;
 
-    FILE *fp = FcitxXDGGetFileUserWithPrefix("conf", "fcitx-uk-autoeng.config",
+    FILE *fp = FcitxXDGGetFileUserWithPrefix("conf", "fcitx-autoeng-ng.config",
                                              "r", NULL);
 
     if (!fp) {

@@ -1,9 +1,9 @@
 [Addon]
-Name=fcitx-uk-autoeng
+Name=fcitx-autoeng-ng
 _GeneralName=Auto English Mode
 _Comment=Auto Change to English Mode while Input Specific String
 Category=Module
 Enabled=True
-Library=fcitx-uk-autoeng.so
+Library=fcitx-autoeng-ng.so
 Type=SharedLibrary
 SubConfig=Auto English Trigger Word:native:data/UK-AutoEng.dat,fcitx:domain
