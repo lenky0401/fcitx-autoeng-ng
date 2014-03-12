@@ -314,7 +314,7 @@ void *AutoEngCreate(FcitxInstance *instance)
     rhk.func = ResetAutoEng;
     FcitxInstanceRegisterResetInputHook(instance, rhk);
 
-    FcitxInstanceRegisterWatchableContext(instance, CONTEXT_DISABLE_AUTOENG, FCT_Boolean, FCF_ResetOnInputMethodChange);
+    //FcitxInstanceRegisterWatchableContext(instance, CONTEXT_DISABLE_AUTOENG, FCT_Boolean, FCF_ResetOnInputMethodChange);
 
     ResetAutoEng(autoEngState);
     return autoEngState;
@@ -439,10 +439,10 @@ static boolean PreInputProcessAutoEng(void* arg, FcitxKeySym sym,
 {
     FcitxAutoEngState *autoEngState = (FcitxAutoEngState*)arg;
     FcitxInputState *input = FcitxInstanceGetInputState(autoEngState->owner);
-    boolean disableCheckUAZ = FcitxInstanceGetContextBoolean(
-        autoEngState->owner, CONTEXT_DISABLE_AUTOENG);
-    if (disableCheckUAZ)
-        return false;
+    //boolean disableCheckUAZ = FcitxInstanceGetContextBoolean(
+    //    autoEngState->owner, CONTEXT_DISABLE_AUTOENG);
+    //if (disableCheckUAZ)
+    //    return false;
 	
 	FcitxIM *im = FcitxInstanceGetCurrentIM(autoEngState->owner);
 	if (im == NULL || strcmp("sogoupinyin", im->uniqueName) != 0)
@@ -491,9 +491,9 @@ boolean PostInputProcessAutoEng(void* arg, FcitxKeySym sym, unsigned int state, 
 {
     FcitxAutoEngState* autoEngState = (FcitxAutoEngState*) arg;
     FcitxInputState* input = FcitxInstanceGetInputState(autoEngState->owner);
-    boolean disableCheckUAZ = FcitxInstanceGetContextBoolean(autoEngState->owner, CONTEXT_DISABLE_AUTOENG);
-    if (disableCheckUAZ)
-        return false;
+    //boolean disableCheckUAZ = FcitxInstanceGetContextBoolean(autoEngState->owner, CONTEXT_DISABLE_AUTOENG);
+    //if (disableCheckUAZ)
+    //    return false;
 
 	FcitxIM *im = FcitxInstanceGetCurrentIM(autoEngState->owner);
 	if (im == NULL || strcmp("sogoupinyin", im->uniqueName) != 0)
