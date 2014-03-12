@@ -443,6 +443,10 @@ static boolean PreInputProcessAutoEng(void* arg, FcitxKeySym sym,
         autoEngState->owner, CONTEXT_DISABLE_AUTOENG);
     if (disableCheckUAZ)
         return false;
+	
+	FcitxIM *im = FcitxInstanceGetCurrentIM(autoEngState->owner);
+	if (im == NULL || strcmp("sogoupinyin", im->uniqueName) != 0)
+		return false;
 
     FcitxKeySym keymain = FcitxHotkeyPadToMain(sym);
     if (!autoEngState->active) {
@@ -490,6 +494,11 @@ boolean PostInputProcessAutoEng(void* arg, FcitxKeySym sym, unsigned int state, 
     boolean disableCheckUAZ = FcitxInstanceGetContextBoolean(autoEngState->owner, CONTEXT_DISABLE_AUTOENG);
     if (disableCheckUAZ)
         return false;
+
+	FcitxIM *im = FcitxInstanceGetCurrentIM(autoEngState->owner);
+	if (im == NULL || strcmp("sogoupinyin", im->uniqueName) != 0)
+		return false;
+
     if (FcitxHotkeyIsHotKeyUAZ(sym, state) &&
         (FcitxInputStateGetRawInputBufferSize(input) != 0 ||
          (FcitxInputStateGetKeyState(input) & FcitxKeyState_CapsLock) == 0) &&
@@ -507,6 +516,11 @@ boolean PostInputProcessAutoEng(void* arg, FcitxKeySym sym, unsigned int state, 
 void ResetAutoEng(void *arg)
 {
     FcitxAutoEngState *autoEngState = (FcitxAutoEngState*)arg;
+
+	FcitxIM *im = FcitxInstanceGetCurrentIM(autoEngState->owner);
+	if (im == NULL || strcmp("sogoupinyin", im->uniqueName) != 0)
+		return;
+	
     autoEngState->index = 0;
     AutoEngSetBuffLen(autoEngState, 0);
     autoEngState->active = false;
