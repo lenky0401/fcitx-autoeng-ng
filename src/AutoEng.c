@@ -35,7 +35,19 @@
 #include "fcitx-utils/utils.h"
 #include "fcitx-utils/log.h"
 #include "fcitx-config/xdg.h"
-#include "module/spell/fcitx-spell.h"
+//#include "module/spell/fcitx-spell.h"
+
+#include <fcitx/ime.h>
+#include <fcitx-utils/log.h>
+#include <fcitx/keys.h>
+#include <fcitx/instance.h>
+#include <fcitx/context.h>
+#include <fcitx-config/fcitx-config.h>
+#include <fcitx-config/hotkey.h>
+#include <fcitx-config/xdg.h>
+#include <fcitx-utils/utils.h>
+#include <fcitx/candidate.h>
+
 
 #include "AutoEng.h"
 #define case_autoeng_replace case ' ': case '\'': case '-': case '_':   \
@@ -239,7 +251,7 @@ AutoEngPushKey(FcitxAutoEngState *autoEngState, char key)
             FcitxInstance *instance = autoEngState->owner;
             FcitxInputContext *currentIC = FcitxInstanceGetCurrentIC(instance);
             FcitxInstanceCommitString(instance, currentIC, autoEngState->buf);
-            FcitxInstanceCommitString(instance, currentIC, " ");
+//            FcitxInstanceCommitString(instance, currentIC, " ");
             ResetAutoEng(autoEngState);
             return res | IRV_CLEAN;
         }
@@ -583,11 +595,45 @@ void FreeAutoEng(void* arg)
     fcitx_utils_free(autoEngState->back_buff);
 }
 
+static boolean isEmailType(const char *string)
+{
+	boolean nameStr = false;
+	boolean atChar = false;
+	
+	if (!string)
+		return false;
+	
+	for (; *string != '\0'; string ++) 
+	{
+		if ((*string >= 'a' && *string <= 'z'))
+			nameStr = true;
+		
+		if (*string == '@')
+		{
+			if (!nameStr)
+				break;
+			atChar = true;
+		}
+		
+		if (!((*string >= 'a' && *string <= 'z') || *string == '@'))
+			break;
+	}
+	
+	if (nameStr && atChar)
+		return true;
+	
+	return false;
+}
+
 boolean SwitchToEng(FcitxAutoEngState *autoEngState, const char *str)
 {
     AUTO_ENG *autoeng;
     if (!AutoEngCheckPreedit(autoEngState))
         return false;
+
+	if (isEmailType(str))
+		return true;
+	
     for (autoeng = (AUTO_ENG*)utarray_front(autoEngState->autoEng);
          autoeng != NULL;
          autoeng = (AUTO_ENG*)utarray_next(autoEngState->autoEng, autoeng))
@@ -597,6 +643,7 @@ boolean SwitchToEng(FcitxAutoEngState *autoEngState, const char *str)
     return false;
 }
 
+/*
 static INPUT_RETURN_VALUE
 AutoEngGetCandWordCb(void *arg, const char *commit)
 {
@@ -620,6 +667,7 @@ AutoEngGetCandWordCb(void *arg, const char *commit)
     return res;
 }
 
+
 static void
 AutoEngGetSpellHint(FcitxAutoEngState *autoEngState)
 {
@@ -642,7 +690,7 @@ AutoEngGetSpellHint(FcitxAutoEngState *autoEngState)
         FcitxCandidateWordFreeList(candList);
     }
 }
-
+*/
 #define AUTOENG_MAX_PREEDIT 100
 
 static void
@@ -680,10 +728,11 @@ ShowAutoEngMessage(FcitxAutoEngState *autoEngState, INPUT_RETURN_VALUE *retval)
     FcitxInputStateSetClientCursorPos(input, autoEngState->index);
     FcitxInputStateSetShowCursor(input, true);
 
-    AutoEngGetSpellHint(autoEngState);
+//    AutoEngGetSpellHint(autoEngState);
     FcitxMessagesAddMessageStringsAtLast(FcitxInputStateGetAuxDown(input),
                                          MSG_TIPS,
-                                         _("Press Enter to input text"));
+                                         //_("Press Enter to input text"));
+                                         " ");
     *retval |= IRV_FLAG_UPDATE_INPUT_WINDOW;
 }
 
