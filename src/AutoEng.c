@@ -48,6 +48,7 @@
 #include <fcitx-utils/utils.h>
 #include <fcitx/candidate.h>
 
+#include "cfgrw.h"
 
 #include "AutoEng.h"
 #define case_autoeng_replace case ' ': case '\'': case '-': case '_':   \
@@ -297,6 +298,10 @@ AutoEngCheckPreedit(FcitxAutoEngState *autoEngState)
 
 void *AutoEngCreate(FcitxInstance *instance)
 {
+    int allowNetMode = getCfgValueBool("env.ini", "Setting:AllowNetMode", 1);
+    if (allowNetMode == 0)
+        return NULL;
+
     FcitxAutoEngState* autoEngState = fcitx_utils_new(FcitxAutoEngState);
     autoEngState->owner = instance;
     LoadAutoEng(autoEngState);
