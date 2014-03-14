@@ -5,4 +5,4 @@ set(FCITX_AUTOENG_SOURCES
   AutoEng.c)
 fcitx_add_addon_full(autoeng-ng DESC
   SOURCES ${FCITX_AUTOENG_SOURCES}
-  EXTRA_PO AutoEng.h)
+  HEADERS AutoEng.h)
