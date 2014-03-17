@@ -298,10 +298,13 @@ AutoEngCheckPreedit(FcitxAutoEngState *autoEngState)
 
 void *AutoEngCreate(FcitxInstance *instance)
 {
-    int allowNetMode = getCfgValueBool("env.ini", "Setting:AllowNetMode", 1);
+    int allowNetMode = getCfgValueBool("sogouEnv.ini", "Advance:UrlMode", 1);
     if (allowNetMode == 0)
+    {
+        FcitxLog(ERROR, "allowNetMode is 0.\n");
         return NULL;
-
+    }
+    
     FcitxAutoEngState* autoEngState = fcitx_utils_new(FcitxAutoEngState);
     autoEngState->owner = instance;
     LoadAutoEng(autoEngState);
@@ -578,10 +581,10 @@ void LoadAutoEng(FcitxAutoEngState* autoEngState)
     size_t   length = 0;
 
     LoadAutoEngConfig(&autoEngState->config);
-    fp = FcitxXDGGetFileWithPrefix("data", "AutoEng.dat", "r", NULL);
+    fp = FcitxXDGGetFileWithPrefix("data", "AutoEngNg.dat", "r", NULL);
     if (!fp)
 	{
-		FcitxLog(WARNING, "Load AutoEng.dat failed");
+		FcitxLog(WARNING, "Load AutoEngNg.dat failed");
         return;
 	}
     utarray_new(autoEngState->autoEng, &autoeng_icd);
@@ -590,7 +593,7 @@ void LoadAutoEng(FcitxAutoEngState* autoEngState)
     while (getline(&buf, &length, fp) != -1) {
         char* line = fcitx_utils_trim(buf);
         if (strlen(line) > MAX_AUTO_TO_ENG)
-            FcitxLog(WARNING, _("Too long item for AutoEng"));
+            FcitxLog(WARNING, _("Too long item for AutoEngNg"));
         strncpy(autoeng.str, line, MAX_AUTO_TO_ENG);
         free(line);
         autoeng.str[MAX_AUTO_TO_ENG] = '\0';
