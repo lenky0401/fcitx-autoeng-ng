@@ -23,12 +23,12 @@ char *getCfgValueString(const char *fileName, const char *fieldName, char *defau
 	static char val[VALUE_SIZE] = {0};
 
     if ((ini = iniparser_load(getCfgFilePath(fileName))) == NULL)
-        return NULL;
+        return defaultvalue;
 
     if ((s = iniparser_getstring(ini, fieldName, defaultvalue)) == NULL)
     {
         iniparser_freedict(ini);
-        return NULL;
+        return defaultvalue;
     }
 
     strcpy(val, s);
@@ -44,7 +44,7 @@ int getCfgValueBool(const char *fileName, const char *fieldName, int defaultvalu
     dictionary *ini;
 
     if ((ini = iniparser_load(getCfgFilePath(fileName))) == NULL)
-        return 0;
+        return defaultvalue;
 
     val = iniparser_getboolean(ini, fieldName, defaultvalue);
 
