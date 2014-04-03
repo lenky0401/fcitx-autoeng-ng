@@ -75,6 +75,7 @@ typedef struct {
 } FcitxAutoEngConfig;
 
 typedef struct _FcitxAutoEngState {
+    boolean enable;
     UT_array *autoEng;
     char *buf;
     int index;
@@ -298,16 +299,11 @@ AutoEngCheckPreedit(FcitxAutoEngState *autoEngState)
 
 void *AutoEngCreate(FcitxInstance *instance)
 {
-    int allowNetMode = getCfgValueBool("sogouEnv.ini", "Advance:UrlMode", 1);
-    if (allowNetMode == 0)
-    {
-        FcitxLog(ERROR, "allowNetMode is 0.\n");
-        return NULL;
-    }
-    
     FcitxAutoEngState* autoEngState = fcitx_utils_new(FcitxAutoEngState);
     autoEngState->owner = instance;
     LoadAutoEng(autoEngState);
+
+    autoEngState->enable = getCfgValueBool("sogouEnv.ini", "Advance:UrlMode", 1);
 
     FcitxKeyFilterHook khk;
     khk.arg = autoEngState;
@@ -451,6 +447,8 @@ static boolean PreInputProcessAutoEng(void* arg, FcitxKeySym sym,
     //    autoEngState->owner, CONTEXT_DISABLE_AUTOENG);
     //if (disableCheckUAZ)
     //    return false;
+    if (autoEngState->enable == false)
+        return false;
 	
 	FcitxIM *im = FcitxInstanceGetCurrentIM(autoEngState->owner);
 	if (im == NULL || strcmp("sogoupinyin", im->uniqueName) != 0)
@@ -502,6 +500,9 @@ boolean PostInputProcessAutoEng(void* arg, FcitxKeySym sym, unsigned int state, 
     //boolean disableCheckUAZ = FcitxInstanceGetContextBoolean(autoEngState->owner, CONTEXT_DISABLE_AUTOENG);
     //if (disableCheckUAZ)
     //    return false;
+    
+    if (autoEngState->enable == false)
+        return false;
 
 	FcitxIM *im = FcitxInstanceGetCurrentIM(autoEngState->owner);
 	if (im == NULL || strcmp("sogoupinyin", im->uniqueName) != 0)
@@ -524,6 +525,9 @@ boolean PostInputProcessAutoEng(void* arg, FcitxKeySym sym, unsigned int state, 
 void ResetAutoEng(void *arg)
 {
     FcitxAutoEngState *autoEngState = (FcitxAutoEngState*)arg;
+
+    if (autoEngState->enable == false)
+        return false;
 
 	FcitxIM *im = FcitxInstanceGetCurrentIM(autoEngState->owner);
 	if (im == NULL || strcmp("sogoupinyin", im->uniqueName) != 0)
@@ -768,5 +772,6 @@ void ReloadAutoEng(void* arg)
     FcitxAutoEngState *autoEngState = (FcitxAutoEngState*)arg;
     AutoEngFreeList(autoEngState);
     LoadAutoEng(autoEngState);
+    autoEngState->enable = getCfgValueBool("sogouEnv.ini", "Advance:UrlMode", 1);
 }
 // kate: indent-mode cstyle; space-indent on; indent-width 0;
