@@ -527,7 +527,7 @@ void ResetAutoEng(void *arg)
     FcitxAutoEngState *autoEngState = (FcitxAutoEngState*)arg;
 
     if (autoEngState->enable == false)
-        return false;
+        return;
 
 	FcitxIM *im = FcitxInstanceGetCurrentIM(autoEngState->owner);
 	if (im == NULL || strcmp("sogoupinyin", im->uniqueName) != 0)
